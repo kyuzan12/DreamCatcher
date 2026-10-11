@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DreamCatcher – Student Sleep Disorder Screening</title>
+<style>
+  :root { --teal:#0b6e75; --teal-d:#08545a; --teal-l:#e6f3f4; --ink:#1c2b36; --muted:#5b6b78; --line:#d5dde3; --bg:#f3f6f8; --card:#fff;
+          --red:#b42318; --red-l:#fdecea; --amber:#9a5b00; --amber-l:#fff4e0; --green:#17653f; --green-l:#e7f5ee; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif; color:var(--ink); background:var(--bg); line-height:1.45; }
+  .top { background:#fff; border-bottom:3px solid var(--teal); }
+  .top .in { max-width:1000px; margin:0 auto; padding:12px 16px; display:flex; align-items:center; gap:12px; }
+  .mark { width:38px; height:38px; border-radius:9px; background:var(--teal); color:#fff; display:grid; place-items:center; font-weight:700; font-size:1.2rem; }
+  .brand b { display:block; font-size:1.2rem; letter-spacing:.2px; }
+  .brand small { color:var(--muted); font-size:.82rem; }
+  main { max-width:1000px; margin:18px auto; padding:0 16px 40px; }
+  .notice { background:var(--teal-l); border:1px solid #b9dadd; color:var(--teal-d); border-radius:8px; padding:10px 14px; font-size:.9rem; margin-bottom:16px; }
+  .person { background:var(--card); border:1px solid var(--line); border-radius:10px; margin-bottom:16px; overflow:hidden; }
+  .phead { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; background:#f8fafb; border-bottom:1px solid var(--line); padding:10px 16px; }
+  .phead h2 { margin:0; font-size:1.05rem; color:var(--teal-d); }
+  .phead .label { flex:1; min-width:180px; max-width:320px; }
+  .phead .btns { margin-left:auto; display:flex; gap:6px; }
+  .body { display:grid; grid-template-columns:repeat(2,1fr); gap:6px 18px; padding:14px 16px 16px; }
+  fieldset { border:0; margin:0; padding:0; min-width:0; }
+  legend { font-size:.74rem; letter-spacing:.9px; text-transform:uppercase; color:var(--teal); font-weight:700; padding:6px 0; border-bottom:1px solid var(--teal-l); width:100%; margin-bottom:8px; }
+  .f { margin-bottom:11px; }
+  label { display:block; font-weight:600; font-size:.88rem; margin-bottom:3px; }
+  .hint { color:var(--muted); font-size:.78rem; margin-top:2px; }
+  .msg { color:var(--red); font-size:.8rem; margin-top:3px; }
+  input,select { width:100%; padding:8px 10px; border:1px solid #b9c5ce; border-radius:6px; font-size:.95rem; background:#fff; color:var(--ink); }
+  input:focus,select:focus { outline:2px solid #8cc7cc; border-color:var(--teal); }
+  .bad { border-color:var(--red) !important; background:#fff8f7; }
+  .pair { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:6px; }
+  .pair span { color:var(--muted); font-weight:700; }
+  button { font:inherit; cursor:pointer; border-radius:6px; padding:9px 18px; font-weight:600; border:1px solid var(--teal); background:#fff; color:var(--teal); }
+  button:hover { background:var(--teal-l); }
+  button.primary { background:var(--teal); color:#fff; }
+  button.primary:hover { background:var(--teal-d); }
+  button.link { border:0; background:none; padding:4px 8px; font-size:.85rem; text-decoration:underline; }
+  button.link.danger { color:var(--red); }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+  .actions { display:flex; flex-wrap:wrap; gap:10px; margin:6px 0 4px; }
+  .actions .sp { flex:1; }
+  #top-error { color:var(--red); font-size:.9rem; margin:8px 0; white-space:pre-wrap; }
+  #results { margin-top:22px; }
+  #results h2 { font-size:1.15rem; margin:0 0 10px; }
+  table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); }
+  th,td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); font-size:.92rem; vertical-align:top; }
+  th { background:#f1f5f7; font-size:.78rem; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); }
+  .badge { display:inline-block; padding:3px 10px; border-radius:999px; font-weight:600; font-size:.82rem; }
+  .b-high { background:var(--red-l); color:var(--red); }
+  .b-mid { background:var(--amber-l); color:var(--amber); }
+  .b-low { background:var(--green-l); color:var(--green); }
+  .detail td { background:#fafcfd; }
+  .bar { display:grid; grid-template-columns:150px 1fr 66px; align-items:center; gap:8px; margin:5px 0; font-size:.88rem; }
+  .bar strong { white-space:nowrap; }
+  .track { height:10px; background:#e5ebef; border-radius:5px; overflow:hidden; }
+  .fill { height:100%; background:#7da6b3; } .fill.top1 { background:var(--teal); }
+  .adv { font-size:.9rem; margin:8px 0 2px; }
+  .note { font-size:.8rem; color:var(--teal-d); background:var(--teal-l); border-radius:6px; padding:6px 8px; margin-top:6px; }
+  .disc { font-size:.82rem; color:var(--muted); margin-top:12px; }
+  footer { text-align:center; color:var(--muted); font-size:.78rem; padding:0 0 26px; }
+  @media (max-width:700px) { .body { grid-template-columns:1fr; } .bar { grid-template-columns:110px 1fr 62px; } }
+</style>
+</head>
+<body>
+<div class="top"><div class="in"><div class="mark">D</div><div class="brand"><b>DreamCatcher</b><small>Student Sleep Disorder Screening</small></div></div></div>
+<main>
+  <div class="notice"><strong>Screening aid only.</strong> This tool does not diagnose any condition and results are not stored. If you are worried about your sleep, consult a health professional.</div>
+  <div id="people"></div>
+  <div class="actions">
+    <button type="button" id="add">+ Add person</button>
+    <span class="sp"></span>
+    <button type="button" id="resetAll">Reset all</button>
+    <button type="button" id="run" class="primary">Run screening</button>
+  </div>
+  <div id="top-error" role="alert"></div>
+  <section id="results" hidden aria-live="polite"></section>
+</main>
+<footer>DreamCatcher · ITTE105b Analytics Application · Educational use only</footer>
+
+<script>
+const MAX_PEOPLE = 20;
+let OPT = {};
+let nextId = 1;
+const $ = (s, r = document) => r.querySelector(s);
+
+/* field definitions: select fields take their choices from /options; number fields accept digits only */
+const SECTIONS = [
+  { title: "Profile", fields: [
+    { k: "gender", label: "Gender", t: "select" },
+    { k: "age", label: "Age", t: "num", unit: "years", len: 2, min: 16, max: 60, hint: "The model was built on students aged 18–30." } ] },
+  { title: "Sleep", fields: [
+    { k: "sleep_duration", label: "Usual sleep duration per night", t: "select" },
+    { k: "sleep_quality", label: "Sleep quality", t: "select" } ] },
+  { title: "Lifestyle", fields: [
+    { k: "stress_level", label: "Usual stress level", t: "select" },
+    { k: "physical_activity", label: "Physical activity", t: "num", unit: "minutes per day", len: 4, min: 0, max: 1440, hint: "A day has 1,440 minutes; the model treats anything above 180 as 180." },
+    { k: "daily_steps", label: "Daily steps", t: "select" } ] },
+  { title: "Body measurements", fields: [
+    { k: "bmi_category", label: "BMI category", t: "select" },
+    { k: "bp", label: "Blood pressure", t: "bp" },
+    { k: "heart_rate", label: "Resting heart rate", t: "num", unit: "beats per minute", len: 3, min: 40, max: 200 } ] },
+];
+const ALL = SECTIONS.flatMap(s => s.fields);
+
+function fieldHTML(f, id) {
+  const fid = `${id}-${f.k}`;
+  if (f.t === "select") return `<div class="f"><label for="${fid}">${f.label}</label><select id="${fid}" data-k="${f.k}"><option value="">Select…</option>${(OPT[f.k] || []).map(v => `<option>${v}</option>`).join("")}</select><div class="msg" data-m="${f.k}"></div></div>`;
+  if (f.t === "bp") return `<div class="f"><label for="${id}-sys">${f.label} <span class="hint">(mmHg)</span></label>
+    <div class="pair"><input id="${id}-sys" data-k="sys" data-len="3" inputmode="numeric" autocomplete="off" placeholder="Systolic, e.g. 120"><span>/</span><input id="${id}-dia" data-k="dia" data-len="3" inputmode="numeric" autocomplete="off" placeholder="Diastolic, e.g. 80"></div>
+    <div class="hint">Systolic (upper) is always higher than diastolic (lower).</div><div class="msg" data-m="bp"></div></div>`;
+  return `<div class="f"><label for="${fid}">${f.label} <span class="hint">(${f.unit})</span></label><input id="${fid}" data-k="${f.k}" data-len="${f.len}" inputmode="numeric" autocomplete="off" placeholder="${f.min}–${f.max}">${f.hint ? `<div class="hint">${f.hint}</div>` : ""}<div class="msg" data-m="${f.k}"></div></div>`;
+}
+
+function personHTML(id) {
+  return `<article class="person" data-id="${id}"><div class="phead"><h2>Person <span class="num"></span></h2>
+    <input class="label" data-k="label" maxlength="30" placeholder="Name or initials (optional)" aria-label="Name or initials">
+    <div class="btns"><button type="button" class="link" data-act="clear">Clear</button><button type="button" class="link danger" data-act="remove">Remove</button></div></div>
+    <div class="body">${SECTIONS.map(s => `<fieldset><legend>${s.title}</legend>${s.fields.map(f => fieldHTML(f, id)).join("")}</fieldset>`).join("")}</div></article>`;
+}
+
+function renumber() {
+  const cards = [...document.querySelectorAll(".person")];
+  cards.forEach((c, i) => { $(".num", c).textContent = i + 1; $('[data-act="remove"]', c).disabled = cards.length === 1; });
+  $("#add").disabled = cards.length >= MAX_PEOPLE;
+}
+function addPerson() {
+  const id = "p" + nextId++;
+  $("#people").insertAdjacentHTML("beforeend", personHTML(id));
+  renumber();
+  const card = $(`.person[data-id="${id}"]`);
+  card.querySelectorAll("input[data-len]").forEach(inp => inp.addEventListener("input", () => { inp.value = inp.value.replace(/\D/g, "").slice(0, +inp.dataset.len); clearErr(card, inp.dataset.k); }));
+  card.querySelectorAll("select").forEach(sel => sel.addEventListener("change", () => clearErr(card, sel.dataset.k)));
+  return card;
+}
+
+/* errors are shown next to the field they belong to */
+function setErr(card, key, text) {
+  const m = card.querySelector(`[data-m="${key}"]`); if (!m) return;
+  m.textContent = text;
+  (key === "bp" ? ["sys", "dia"] : [key]).forEach(t => { const el = card.querySelector(`[data-k="${t}"]`); if (el) el.classList.add("bad"); });
+}
+function clearErr(card, key) {
+  const k = (key === "sys" || key === "dia") ? "bp" : key;
+  const m = card.querySelector(`[data-m="${k}"]`); if (m) m.textContent = "";
+  (k === "bp" ? ["sys", "dia"] : [k]).forEach(t => { const el = card.querySelector(`[data-k="${t}"]`); if (el) el.classList.remove("bad"); });
+}
+function clearAllErr(card) { card.querySelectorAll(".msg").forEach(m => m.textContent = ""); card.querySelectorAll(".bad").forEach(e => e.classList.remove("bad")); }
+
+function readCard(card) {
+  const v = k => { const el = card.querySelector(`[data-k="${k}"]`); return el ? el.value.trim() : ""; };
+  return { label: v("label"), gender: v("gender"), age: v("age"), sleep_duration: v("sleep_duration"), sleep_quality: v("sleep_quality"), stress_level: v("stress_level"),
+    physical_activity: v("physical_activity"), bmi_category: v("bmi_category"), sys: v("sys"), dia: v("dia"), heart_rate: v("heart_rate"), daily_steps: v("daily_steps") };
+}
+function validate(card) {
+  clearAllErr(card);
+  const d = readCard(card); let ok = true;
+  const bad = (k, t) => { setErr(card, k, t); ok = false; };
+  ALL.forEach(f => {
+    if (f.t === "select") { if (!d[f.k]) bad(f.k, "Please select an answer."); }
+    else if (f.t === "num") {
+      if (d[f.k] === "") bad(f.k, "Required.");
+      else if (+d[f.k] < f.min || +d[f.k] > f.max) bad(f.k, `Enter a value from ${f.min} to ${f.max}.`);
+    }
+  });
+  if (d.sys === "" || d.dia === "") bad("bp", "Enter both blood-pressure values.");
+  else if (+d.sys < 70 || +d.sys > 220) bad("bp", "Systolic must be between 70 and 220 mmHg.");
+  else if (+d.dia < 40 || +d.dia > 130) bad("bp", "Diastolic must be between 40 and 130 mmHg.");
+  else if (+d.sys <= +d.dia) bad("bp", "Systolic must be higher than diastolic.");
+  return ok;
+}
+function payload(card) {
+  const d = readCard(card);
+  return { gender: d.gender, age: +d.age, sleep_duration: d.sleep_duration, sleep_quality: d.sleep_quality, stress_level: d.stress_level, physical_activity: +d.physical_activity,
+    bmi_category: d.bmi_category, blood_pressure: `${d.sys}/${d.dia}`, heart_rate: +d.heart_rate, daily_steps: d.daily_steps };
+}
+
+/* results */
+const pct = x => (x * 100).toFixed(0) + "%";
+function advice(r) {
+  if (r.screening_flag) return ["b-high", "Higher likelihood", "Consider a professional evaluation."];
+  if (r.high_sensitivity_flag) return ["b-mid", "Possible", "Consider speaking to a health professional, especially if symptoms are present."];
+  return ["b-low", "Lower likelihood", "Does not rule out a sleep disorder; seek advice if symptoms are present."];
+}
+const confLabel = c => c < 0.5 ? "low" : c < 0.7 ? "moderate" : "higher";
+function tieNote(r) {
+  if (!r.tied_with.length) return "";
+  const other = r.tied_with.join(" and ");
+  if (r.tied_with.includes("No Sleep Disorder"))
+    return `<div class="note">Tied with ${other} (${pct(r.confidence)} each). A tie is reported as the possible disorder so that a real case is not missed.</div>`;
+  return `<div class="note">Equally likely as ${other} (${pct(r.confidence)} each).</div>`;
+}
+function ruleNote(r) {
+  if (!r.clinical_rule_applied) return "";
+  return `<div class="note">Insomnia was ruled out: 8 hours or more of good or excellent sleep does not fit insomnia, which requires dissatisfaction with sleep.
+    The model's estimate before this check was ${pct(r.model_probabilities["Insomnia"])} for Insomnia; the other two probabilities were rescaled.</div>`;
+}
+function renderResults(res, labels) {
+  const rows = res.map((r, i) => {
+    const [cls, title, text] = advice(r), name = labels[i];
+    const bars = r.ranking.map(c => {
+      const p = r.probabilities[c], out = r.clinical_rule_applied && c === "Insomnia";
+      return `<div class="bar"><span>${c}</span><div class="track"><div class="fill ${c === r.predicted_class ? "top1" : ""}" style="width:${pct(p)}"></div></div><strong>${out ? "ruled out" : pct(p)}</strong></div>`;
+    }).join("");
+    return `<tr><td><strong>${name}</strong></td><td><strong>${r.predicted_class}</strong><div class="hint">Confidence ${pct(r.confidence)} (${confLabel(r.confidence)})</div>${tieNote(r)}</td>
+      <td><span class="badge ${cls}">${title}</span><div class="adv">${text}</div></td><td><button type="button" class="link" data-det="${i}">Details</button></td></tr>
+      <tr class="detail" id="det-${i}" hidden><td colspan="4"><strong>Estimated probabilities</strong>${bars}<div class="hint">Probability of any sleep disorder: ${pct(r.any_disorder_probability)}</div>${ruleNote(r)}</td></tr>`;
+  }).join("");
+  $("#results").innerHTML = `<h2>Screening results</h2><table><thead><tr><th>Person</th><th>Most likely pattern</th><th>Screening advice</th><th></th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="disc">Screening advice is based on the probability of <em>any</em> sleep disorder, so it can say “Possible” even when “No Sleep Disorder” is the most likely pattern.</div>`;
+  $("#results").hidden = false;
+  document.querySelectorAll("[data-det]").forEach(b => b.addEventListener("click", () => { const row = $("#det-" + b.dataset.det); row.hidden = !row.hidden; b.textContent = row.hidden ? "Details" : "Hide"; }));
+  $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function run() {
+  $("#top-error").textContent = "";
+  const cards = [...document.querySelectorAll(".person")];
+  const valid = cards.map(validate);
+  if (valid.includes(false)) {
+    const first = cards[valid.indexOf(false)].querySelector(".bad");
+    $("#top-error").textContent = "Some answers need attention. The fields to fix are marked in red."; if (first) first.focus(); return;
+  }
+  $("#run").disabled = true; $("#run").textContent = "Running…";
+  try {
+    const r = await fetch("/predict-batch", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ people: cards.map(payload) }) });
+    const data = await r.json();
+    if (!r.ok) {
+      let shown = false;
+      (Array.isArray(data.detail) ? data.detail : []).forEach(e => {
+        const pi = e.loc.indexOf("people"), i = pi >= 0 ? e.loc[pi + 1] : 0, key = e.loc[e.loc.length - 1];
+        if (cards[i]) { setErr(cards[i], key === "blood_pressure" ? "bp" : key, (e.msg || "Invalid value").replace(/^Value error, /, "").replace(/^./, c => c.toUpperCase()) + "."); shown = true; }
+      });
+      $("#top-error").textContent = shown ? "Some answers were not accepted. The fields to fix are marked in red." : "The service rejected the request.";
+    } else renderResults(data.results, cards.map((c, i) => readCard(c).label || `Person ${i + 1}`));
+  } catch (e) { $("#top-error").textContent = "The service did not respond. Check that the server is running."; }
+  $("#run").disabled = false; $("#run").textContent = "Run screening";
+}
+
+function resetAll() {
+  $("#people").innerHTML = ""; $("#results").hidden = true; $("#results").innerHTML = ""; $("#top-error").textContent = ""; nextId = 1; addPerson();
+}
+$("#add").addEventListener("click", () => { const c = addPerson(); c.scrollIntoView({ behavior: "smooth", block: "center" }); });
+$("#run").addEventListener("click", run);
+$("#resetAll").addEventListener("click", resetAll);
+$("#people").addEventListener("click", ev => {
+  const b = ev.target.closest("[data-act]"); if (!b) return; const card = b.closest(".person");
+  if (b.dataset.act === "remove") { card.remove(); renumber(); }
+  if (b.dataset.act === "clear") { card.querySelectorAll("input,select").forEach(e => e.value = ""); clearAllErr(card); }
+});
+
+(async function init() {
+  try { OPT = await (await fetch("/options")).json(); }
+  catch (e) { $("#top-error").textContent = "Could not reach the DreamCatcher service. Open this page from the running server (http://localhost:8000/web/)."; }
+  addPerson();
+})();
+</script>
+</body>
+</html>

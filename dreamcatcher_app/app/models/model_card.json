@@ -1,0 +1,117 @@
+{
+  "project": "DreamCatcher",
+  "model": "KNN",
+  "trained_on": "2026-10-11",
+  "n_training_rows": 619,
+  "classes": [
+    "Insomnia",
+    "No Sleep Disorder",
+    "Sleep Apnea"
+  ],
+  "features": [
+    "age",
+    "physical_activity",
+    "heart_rate",
+    "systolic",
+    "diastolic",
+    "map",
+    "pulse_pressure",
+    "sleep_duration",
+    "sleep_quality",
+    "stress_level",
+    "bmi_category",
+    "daily_steps",
+    "academic_level",
+    "gender",
+    "department"
+  ],
+  "options": {
+    "gender": [
+      "Male",
+      "Female"
+    ],
+    "department": [
+      "CSE",
+      "Mathematics",
+      "ECE",
+      "Agriculture",
+      "Other"
+    ],
+    "academic_level": [
+      "Level-1",
+      "Level-2",
+      "Level-3",
+      "Level-4"
+    ],
+    "sleep_duration": [
+      "Less than 4 hours",
+      "4-5 hours",
+      "6-7 hours",
+      "8 hours or more"
+    ],
+    "sleep_quality": [
+      "Very Poor",
+      "Poor",
+      "Average",
+      "Good",
+      "Excellent"
+    ],
+    "stress_level": [
+      "Very Low",
+      "Low",
+      "Moderate",
+      "High",
+      "Very High"
+    ],
+    "bmi_category": [
+      "Underweight",
+      "Normal",
+      "Overweight",
+      "Obese"
+    ],
+    "daily_steps": [
+      "Less than 4,999",
+      "5,000-7,999",
+      "8,000-11,999",
+      "12,000-15,999",
+      "More than 16,000"
+    ]
+  },
+  "feature_set": "Clinically grounded",
+  "dropped_features": [
+    "academic_level",
+    "department"
+  ],
+  "decision_rules": {
+    "tie_order": [
+      "Insomnia",
+      "Sleep Apnea",
+      "No Sleep Disorder"
+    ],
+    "clinical_rule": "Insomnia ruled out when sleep_duration is '8 hours or more' and sleep_quality is 'Good' or 'Excellent'; the other probabilities are rescaled"
+  },
+  "screening_thresholds": {
+    "balanced_youden": 0.6875,
+    "high_sensitivity_90": 0.44
+  },
+  "best_params": {
+    "n_neighbors": "25",
+    "p": "1",
+    "weights": "uniform",
+    "k": "all",
+    "smote": "SMOTE"
+  },
+  "cv_macro_f1": 0.3994,
+  "holdout_test": {
+    "Accuracy": 0.4435,
+    "Balanced Acc.": 0.4607,
+    "F1 (macro)": 0.4383
+  },
+  "holdout_test_model_only": {
+    "Accuracy": 0.4758,
+    "Balanced Acc.": 0.477,
+    "F1 (macro)": 0.4664
+  },
+  "sklearn_version": "1.6.1",
+  "disclaimer": "Educational screening aid built from a self-reported student survey. Not a medical diagnosis; consult a health professional."
+}
